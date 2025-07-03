@@ -1,35 +1,23 @@
 import java.io.*;
-import java.util.*;
-import java.util.stream.Collectors;
 
 public class Main {
-    public static void main(String[] args) throws IOException{
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        // 1부터 30까지 담긴 리스트 생성
-        List<Integer> list = new ArrayList<>();
-        for (int i = 1; i <= 30; i++) {
-            list.add(i);
-        }
+        // 1~30까지 출석 체크 배열
+        boolean[] present = new boolean[31];  // 0번은 안 쓰고 1~30 사용
 
-        // 입력값 받아서 리스트에 담기
-        List<Integer> gradesList = new ArrayList<>(28);
+        // 28명의 번호를 읽어서 해당 인덱스를 true로 마킹
         for (int i = 0; i < 28; i++) {
-            String line = br.readLine();
-            gradesList.add(Integer.parseInt(line.trim()));
+            int num = Integer.parseInt(br.readLine().trim());
+            present[num] = true;
         }
 
-        // 차집합 계산
-        Set<Integer> setB = new HashSet<>(gradesList);
-
-        List<Integer> diff = list.stream()
-        .filter(e -> !setB.contains(e))
-        .sorted()
-        .collect(Collectors.toList());
-
-        // 정렬 후 출석 번호 호출
-        for (int num : diff) {
-            System.out.println(num);    
+        // 마킹되지 않은(결석한) 번호만 출력
+        for (int i = 1; i <= 30; i++) {
+            if (!present[i]) {
+                System.out.println(i);
+            }
         }
     }
 }
