@@ -1,22 +1,27 @@
 class Solution {
     public int solution(int n) {
-        int answer = 0;
-        
-        for (int i = 1; i <= n; i++) {
-            int count = 0;
-            
-            // i의 약수 개수 세기
-            for (int j = 1; j <= i; j++) {
-                if (i % j == 0) {
-                    count++;
+        // 에라토스테네스의 체 기반
+        // 작은 소수부터 시작해여 그 배수를 차례로 지워나가면, 남는 수는 모두 소수이다.
+        boolean[] isNotPrime = new boolean[n + 1];
+
+        isNotPrime[0] = true;
+        isNotPrime[1] = true;
+
+        for (int i = 2; i * i <= n; i++) {
+            if (!isNotPrime[i]) {
+                for (int j = i * i; j <= n; j += i) {
+                    isNotPrime[j] = true;
                 }
             }
-            
-            // 약수가 3개 이상이면 합성수
-            if (count >= 3) {
-                answer++;
+        }
+
+        int count = 0;
+        for (int i = 4; i <= n; i++) {
+            if (isNotPrime[i]) {
+                count++;
             }
         }
-        return answer;
+
+        return count;
     }
 }
