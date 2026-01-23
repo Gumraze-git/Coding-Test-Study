@@ -2,20 +2,23 @@ import java.util.*;
 
 class Solution {
     public int solution(int[] nums) {
-        // 같은 종류의 폰켓몬은 같은 번호를 가지고 있음
-        // 최대한 많은 종류의 폰켓몬을 가지는 방법
+        // 총 N마리의 폰켓몬 중 N/2마리를 가져도 된다.
+        // 최대한 다양한 종류의 폰켓몬을 가지려 한다.
+        // 종류의 수를 반환하다.
+        // HashSet문제
         
-        Set<Integer> kinds = new HashSet<>();
+        Set<Integer> set = new HashSet<>();
         
-        // 중복 제거
-        for (int n : nums) {
-            kinds.add(n);
+        for (int i : nums) {       
+            set.add(i);    
         }
+        // 전체 종류가 M개여도
+        int distinctCount = set.size();
+        // M/2개 밖에 못가져감.
+        int limit = nums.length / 2;
         
-        // 선택 가능 마리 수
-        int maxPick = nums.length / 2;
-        
-        // 최대로 가질 수 있는 종류       
-        return Math.min(kinds.size(), maxPick);
+        // 전체 종류가 가져간 종류보다 작은 경우 distinctCount
+        // 그렇지 않은 경우 최대 가져갈 수 있는 종류 limit
+        return Math.min(distinctCount, limit);
     }
 }
