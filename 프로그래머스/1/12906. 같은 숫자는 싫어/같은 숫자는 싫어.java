@@ -2,29 +2,28 @@ import java.util.*;
 
 public class Solution {
     public int[] solution(int[] arr) {
-        // arr의 원소는 0부터 9까지로 이루어져 있음.
-        // 배열 arr에서 연속적으로 나타나는 숫자는 하나만 남기고 전부 제거함.
-        // 단, 순서를 유지하면서
+        // arr의 각 원소는 0~9임.
+        // arr에서 연속적으로 나타나는 숫자는 하나만 남기고 전부 제거하려고 함.
         
-        List<Integer> answer = new ArrayList<>();
+        Stack<Integer> stack = new Stack<>();
         
-        for (int i = 0; i < arr.length; i++) {
-            // 첫 원소 넣기
-            if (answer.size() == 0) {
-                answer.add(arr[i]);
+        for (int num = 0; num < arr.length; num++) {
+            if (stack.isEmpty()) {
+                stack.push(arr[num]);
             } else {
-                if (answer.get(answer.size() - 1) == arr[i]) {
+                // 마지막에 넣은 값이랑 비교
+                if (arr[num] == stack.peek()) {
                     continue;
                 } else {
-                    answer.add(arr[i]);
+                    stack.push(arr[num]);
                 }
             }
         }
         
-        // 다시 변환    
-        int[] result = answer.stream()
-                            .mapToInt(Integer::intValue)
-                            .toArray();
-        return result;
+        // int[]로 변환
+        int[] answer = stack.stream()
+            .mapToInt(Integer::intValue)
+            .toArray();      
+        return answer;
     }
 }
