@@ -8,24 +8,21 @@ class Solution {
         
         Map<String, Integer> map = new HashMap<>();
         
-        for (String[] c : clothes) {
-            String type = c[1];
-            System.out.println(type);
-            
-            map.put(type, map.getOrDefault(type, 0) + 1);
+        // 종류별 개수 집계
+        for (String[] item : clothes) {
+            map.put(item[1], map.getOrDefault(item[1], 0) + 1);
         }
-        
-        int answer = 1;
-        for (int cnt : map.values()) {
-            System.out.println("cnt: " + cnt);
-            answer *= (cnt + 1);
-            
-            System.out.println("answer: " + answer);
-        }
-        
         System.out.println(map);
         
+        // (count + 1)들을 곱한 뒤, -1
+        int answer = 1;
+        for (int count : map.values()) {
+            answer *= (count + 1);      // 아무것도 선택하지 않는 경우 고려
+        }
         
-        return answer - 1;
+        // 아무것도 안입는 경우 제외
+        answer -= 1;
+        
+        return answer;
     }
 }
