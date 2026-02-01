@@ -2,28 +2,29 @@ import java.util.*;
 
 class Solution {
     public int[] solution(int[] answers) {
+        int[] first = {1, 2, 3, 4, 5};
+        int[] second = {2, 1, 2, 3, 2, 4, 2, 5};
+        int[] third = {3, 3, 1, 1, 2, 2, 4, 4, 5, 5};
 
-        int[] fir = {1, 2, 3, 4, 5};
-        int[] sec = {2, 1, 2, 3, 2, 4, 2, 5};
-        int[] thr = {3, 3, 1, 1, 2, 2, 4, 4, 5, 5};
-
-        int[] scores = new int[3];
+        int scoreFirst = 0;
+        int scoreSecond = 0;
+        int scoreThird = 0;
 
         for (int i = 0; i < answers.length; i++) {
-            if (answers[i] == fir[i % fir.length]) scores[0]++;
-            if (answers[i] == sec[i % sec.length]) scores[1]++;
-            if (answers[i] == thr[i % thr.length]) scores[2]++;
+            int answer = answers[i];
+
+            if (first[i % first.length] == answer) scoreFirst++;
+            if (second[i % second.length] == answer) scoreSecond++;
+            if (third[i % third.length] == answer) scoreThird++;
         }
 
-        int max = Math.max(scores[0], Math.max(scores[1], scores[2]));
+        int maxScore = Math.max(scoreFirst, Math.max(scoreSecond, scoreThird));
 
         List<Integer> result = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            if (scores[i] == max) {
-                result.add(i + 1);
-            }
-        }
+        if (scoreFirst == maxScore) result.add(1);
+        if (scoreSecond == maxScore) result.add(2);
+        if (scoreThird == maxScore) result.add(3);
 
-        return result.stream().mapToInt(i -> i).toArray();
+        return result.stream().mapToInt(Integer::intValue).toArray();
     }
 }
