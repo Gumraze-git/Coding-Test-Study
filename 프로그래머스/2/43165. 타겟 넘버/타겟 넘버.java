@@ -1,24 +1,30 @@
 class Solution {
-
-    private int count;
-
+    // count 선언
+    private int target;
+    private int[] numbers;
+    
     public int solution(int[] numbers, int target) {
-        count = 0;
-        dfs(numbers, target, 0, 0); // idx=0, sum=0 시작
-        return count;
+        // n개의 음이 아닌 정수가 있음.
+        // 정수들의 순서를 바꾸지 않고 target으로 만들 수 있는 방법의 수를 return
+        return dfs(0, 0, numbers, target);
     }
-
-    private void dfs(int[] numbers, int target, int idx, int sum) {
-        // 종료 조건: 모든 숫자를 다 사용한 경우
-        if (idx == numbers.length) {
-            if (sum == target) count++;
-            return;
+    
+    // 상태 정의
+    // dfs(index, sum)
+    // index까지 처리했고
+    // 현재 누적합이 sum일 때
+    // target을 만들 수 있는 경우의 수
+    private int dfs(int index, int sum, int[] numbers, int target) {
+        // 종료 조건
+        if (index == numbers.length) {
+            return (sum == target) ? 1 : 0;
         }
-
-        // 다음 상태: + 선택
-        dfs(numbers, target, idx + 1, sum + numbers[idx]);
-
-        // 다음 상태: - 선택
-        dfs(numbers, target, idx + 1, sum - numbers[idx]);
+        // 재귀 분기
+        int plus = dfs(index + 1, sum + numbers[index], numbers, target);
+        int minus = dfs(index + 1, sum - numbers[index], numbers, target);
+        
+        return plus + minus;
     }
+    
+    
 }
