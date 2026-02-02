@@ -1,11 +1,13 @@
 class Solution {
     public int solution(int n) {
+        int i = 1;
         int fact = 1;
-        int answer = 1;
+
         while (fact <= n) {
-            answer++;
-            fact *= answer;
+            i++;
+            fact *= i;
         }
-        return answer - 1;
+
+        return i - 1;
     }
 }
