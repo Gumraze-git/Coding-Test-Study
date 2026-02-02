@@ -1,13 +1,16 @@
-import java.util.*;
-
+// 재귀로 풀이
 public class Solution {
     public int solution(int n) {
-        int answer = 0;
-        String strInt = String.valueOf(n);
-        for (char c : strInt.toCharArray()) {
-            answer += Integer.parseInt("" + c);
-        }
-
-        return answer;
+        return digitSum(n);
     }
+    
+    // 상태 정의
+    // digitSum(n) = (n % 10) + digitSum(n / 10)
+    private int digitSum(int n) {
+        if (n < 10) {
+            return n;
+        }
+        return (n % 10) + digitSum(n / 10);
+    }
+    
 }
