@@ -1,38 +1,31 @@
 class Solution {
-    
-    // 모음 사전
-    private static final char[] VOWELS = {'A', 'E', 'I', 'O', 'U'};
-    
-    private int count = 0; // 사전에 등록된 단어 개수
-    private int answer = 0; // 찾은 위치
-    private boolean found = false;
+    private String[] list = {"A", "E", "I", "O", "U"};
+    // 몇 번째 단어인지 기록
+    private int count = 0;
     
     public int solution(String word) {
-        dfs(word, "");      // 빈 문자열에서 시작해야 "A"가 첫 번째가 됨
-        return answer;
+        dfs(word, "", 0);
+        
+        return count;
     }
     
-    private void dfs(String target, String cur) {
-        // 종료 조건
-        // 이미 찾았으면 더 탐색하지 않음
-        if (found) return;
-        if (cur.length() > 5) return;       // 6이상 이면 pass
+    // dfs: 모든 문자열을 사전 순으로 만들기
+    private boolean dfs(String word, String current, int depth) {
+        // 종료 조건: 길이 제한, 단어가 일치하면 종료
+        if (current.length() > 5) return false;
         
-        // 빈 문자열은 사전에 포함되지 않음으로 제외하고 count 증가
-        if (!cur.isEmpty()) {
+        // 빈 문자열을 단어로 세지 않음
+        if (!current.isEmpty()) {
+            // 사전 순서 업데이트
             count++;
-            if (cur.equals(target)) {
-                answer = count;
-                found = true;
-                return;
-            }
+            if (current.equals(word)) return true;
         }
         
-        // 다음 상태 생성: 뒤에 모음 하나 붙이기
-        if (cur.length() == 5) return; // 길이 5이상이면 더 확장 불가
-        
-        for (char c : VOWELS) {
-            dfs(target, cur + c);
-        }  
+        // 모든 사전의 단어에 대해서
+        // A -> AA -> AAA -> AAAA -> ...
+        for (String s : list) {
+            if (dfs(word, current + s, depth + 1)) return true;
+        }
+        return false;
     }
 }
