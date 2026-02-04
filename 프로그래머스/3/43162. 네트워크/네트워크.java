@@ -1,43 +1,37 @@
-// 20260203 연습
+// 20260204 dfs 연습
 class Solution {
     public int solution(int n, int[][] computers) {
-        // 네트워크 찾기
-        // 네트워크를 찾으면 해당 네트워크와 연결된 곳들은 모두 방문 처리
+        // 네트워크의 개수 찾기
+        int count = 0;          // 네트워크의 수
+        boolean[] visited = new boolean[n];     // 방문 여부 확인
         
-        // 네트워크의 개수
-        int count = 0;
-        
-        // 방문확인 배열 = 노드의 수많큼
-        boolean[] visited = new boolean[n];
-        
-        // 모든 노드에 대해서
+        // 모든 컴퓨터에 대해서
         for (int i = 0; i < n; i++) {
             // 방문하지 않은 노드가 있다면
-            if (!visited[i]) {
-                // 네트워크의 수 증가
+            if (!visited[i]) {                
+                // 방문한 네트워크의 수 업데이트
                 count++;
-                // 탐색 수행
-                dfs(i, n, visited, computers);
+                // 해당 노드와 관련된 네트워크를 확인
+                dfs(i, n, computers, visited);
             }
         }
+        
         
         return count;
     }
     
-    // dfs 구현
-    private void dfs(int i, int n, boolean[] visited, int[][] computers) {
-        // 탐색을 시작하며 i번째는 방문 완료 처리
+    // dfs: 네트워크에 속한 노드들을 전부 방문 처리하기
+    private void dfs(int i, int n, int[][] computers, boolean[] visited) {
+        // 현재 노드 방문 처리
         visited[i] = true;
         
-        // i번 컴퓨터와 j번 컴퓨터가 연결되어 있으면 computers[i][j] = 1
-        // 모든 j에 대해서
+        // count를 언제 올려야하는지
         for (int j = 0; j < n; j++) {
-            // 연결되어 있다는 것은 하나의 네트워크라는 의미 -> computers[i][j] == 1
-            // 연결되어 있는데 방문처리를 하지 않았다면? -> !visited[j]
+            // i와 연결된 모든 j중에서 아직 방문하지 않은 j만 dfs(j)
             if (computers[i][j] == 1 && !visited[j]) {
-                // 다음 방문 처리를 위한 탐색 수행
-                dfs(j, n, visited, computers);
+                dfs(j, n, computers, visited);
             }
         }
+        
     }
 }
