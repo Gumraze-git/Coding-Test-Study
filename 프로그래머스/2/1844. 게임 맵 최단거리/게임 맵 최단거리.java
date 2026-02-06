@@ -1,59 +1,65 @@
-// 20260205 BFS 문제
+// 20260206 BFS -> 가중치 없는 최단 거리
 import java.util.*;
 
 class Solution {
-    
-    // 상하좌우 이동을 위한 방향 벡터
-    private int[] DR = {-1, 1, 0, 0};
-    private int[] DC = {0, 0, -1, 1};
-    
     public int solution(int[][] maps) {
-        int rows = maps.length;
-        int cols = maps[0].length;
+        // map의 열과 행의 크기
+        int n = maps.length;
+        int m = maps[0].length;
         
-        // 방문 여부 + 최단거리 저장 배열
-        int[][] distance = new int[rows][cols];
-        
-        // 시작점 (0, 0)이 막혀있으면 도착 불가
-        if (maps[0][0] == 0) return -1;
-        
-        // BFS
+        // 현재 상태: (r, c, dist)
         Queue<int[]> queue = new ArrayDeque<>();
         
-        // 시작점 초기화
-        queue.add(new int[]{0, 0});
-        distance[0][0] = 1;     // 시작 칸도 거리 1로 카운드
+        // 각 칸까지의 최단거리, 0이면 미 방문
+        int[][] distMap = new int[n][m];
         
-        // BFS 루프
+        // 시작 상태 정의
+        distMap[0][0] = 1;
+        queue.offer(new int[]{0, 0, 1});
+        
+        // 갈수 있는 방향 정의
+        int[] dr = {-1, 1, 0, 0};
+        int[] dc = {0, 0, -1, 1};
+        
+        // BFS 도달 가능한 모든 상태를 전부 처리함.
         while (!queue.isEmpty()) {
+            // 큐에서 하나를 꺼냄
             int[] cur = queue.poll();
-            int r = cur[0];
-            int c = cur[1];
             
-            // 현재 칸에서 4방향으로 이동 시도
+            // 현재 상태 정의
+            int r = cur[0];     // 현재 위치: row
+            int c = cur[1];     // 현재 위치: col
+            int dist = cur[2];  // 현재 위치까지의 이동한 거리
+            
+            // 목적지에 도달하면 최단거리임.
+            if (r == n-1 && c == m-1) {
+                return dist;
+            }
+            
+            // 다음 상태 처리: 모든 방향에 대해 체크함.
             for (int k = 0; k < 4; k++) {
-                int nr = r + DR[k];
-                int nc = c + DC[k];
+                // 다음 방향
+                int nextRow = r + dr[k];
+                int nextCol = c + dc[k];
                 
-                // 맵 범위 밖이면 무시
-                if (nr < 0 || nr >= rows || nc < 0 || nc >= cols) continue;
+                // 가능한 방향인지 확인
+                if (nextRow < 0 || nextRow >= n || nextCol < 0 || nextCol >= m) continue;
                 
-                // 벽이면 이동 불가
-                if (maps[nr][nc] == 0) continue;
+                // 벽이 있는지 확인
+                if (maps[nextRow][nextCol] == 0) continue;
                 
-                // 이미 방문한 칸이면 다시 갈 필요 없음
-                if (distance[nr][nc] != 0) continue;
+                // 방문한 경우 넘어감: 0 이면 방문 안한 상태임
+                if (distMap[nextRow][nextCol] != 0) continue;
                 
-                // 방문 처리 + 거리 갱신
-                distance[nr][nc] = distance[r][c] + 1;
+                // 다음 상태 업데이트
+                // 한 칸 움직였으므로 +1
+                distMap[nextRow][nextCol] = dist + 1;
                 
-                // 다음 탐색
-                queue.add(new int[]{nr, nc});
+                // 다음 상태로 업데이트
+                queue.offer(new int[]{nextRow, nextCol, dist + 1});
             }
         }
-        
-        
-        // 도달 못했으면 여전히 0이므로 -1 반환
-        return (distance[rows - 1][cols - 1] == 0)? -1 : distance[rows - 1][cols - 1];
+        // 끝까지 못갔으면 도달 불가
+        return -1;
     }
 }
