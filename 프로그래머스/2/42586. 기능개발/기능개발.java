@@ -2,40 +2,51 @@ import java.util.*;
 
 class Solution {
     public int[] solution(int[] progresses, int[] speeds) {
-        // 기능은 진도가 100%일 때 서비스에 반영 가능함.
-        // 각 기능의 개발 속도가 모두 다름
-        // 뒤에 있는 기능은 앞에 있는 기능이 배포될 때 함께 배포됨.
+        // 각 기능이 언제 100이 되는지 확인해야함.
+        // 앞에 있는 기능이 100이 아니면 뒤에 있는 기능들은 기다려야함.
         
-        // 완료되는 날짜 파악
-        List<Integer> days = new ArrayList<>();
-        for (int num = 0; num < progresses.length; num++) {
-            int remain = 100 - progresses[num];
-            int day = (remain + speeds[num] - 1) / speeds[num]; // 올림
-            days.add(day);
-        }
-        
-        // Queue
+        // 배포되지 않은 기능들의 완료 예정일을 순서대로 담음
         Queue<Integer> q = new ArrayDeque<>();
-        for (int d : days) {
-            q.offer(d);
+        
+        // i번째 기능이 100%가 되는 날짜를 계산
+        for (int i = 0; i < speeds.length; i++) {
+            // 현재 남은 작업량: 현재 30이면 70남은
+            int remain = 100 - progresses[i];
+            
+            // 완료까지 며칠이 필요한지: 30인 상태에서 70을 speed(30)으로 처리하려면 3일이 필요함.
+            int days = (remain + speeds[i] - 1) / speeds[i];
+            
+            // q에 넣기
+            q.offer(days);
         }
         
-        List<Integer> result = new ArrayList<>();
+        System.out.println(q);
+        
+        // 각 배포마다 몇 개의 기능이 나갔는지 저장하는 리스트
+        List<Integer> releases = new ArrayList<>();
+        
         while (!q.isEmpty()) {
-            int qDay = q.poll();
+            // 이번 배포의 기준일
+            int standard = q.poll();
+            // 이번에 배포되는 기능의 수, 기준 기능이 하나 있으므로 1로 시작
             int count = 1;
             
-            while (!q.isEmpty() && q.peek() <= qDay) {
+            // 다음 기능이 기준 날짜보다 같은 날이거나 더 빨리 끝나면 같이 배포 가능
+            while (!q.isEmpty() && q.peek() <= standard) {
+                // 기준 기능보다 먼저 끝난 기능을 배포에 포함하기 위해 q에서 제거
                 q.poll();
-                count++;
+                count++;        // 기능 하나 추가
             }
-            result.add(count);
+            
+            // 하나의 배포가 끝났으므로 이번 배포에서 나간 기능의 수를 기록
+            releases.add(count);
         }
         
+        int[] answer = new int[releases.size()];
+        for (int i = 0; i < releases.size(); i++) {
+            answer[i] = releases.get(i);
+        }
         
-        int[] answer = result.stream()
-            .mapToInt(Integer::intValue)
-            .toArray();
         return answer;
     }
 }
